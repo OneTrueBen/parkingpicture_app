@@ -49,15 +49,23 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
+  File _image;
 
   Future getCameraImage() async {
-  var image = await ImagePicker.pickImage(source: ImageSource.camera);
+    var image = await ImagePicker.pickImage(source: ImageSource.camera);
+
+    setState(() {
+      _image = image;
+    });
   }
 
   Future getGalleryImage() async {
-  var image = await ImagePicker.pickImage(source: ImageSource.gallery);
-  }
+    var image = await ImagePicker.pickImage(source: ImageSource.gallery);
 
+    setState(() {
+      _image = image;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -93,13 +101,33 @@ class _MyHomePageState extends State<MyHomePage> {
           // horizontal).
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            RaisedButton(child: Text('Take a Picture'), onPressed: getCameraImage,),
-            RaisedButton(child: Text('Choose existing picture'), onPressed: getGalleryImage,)
-            
+            Container(
+              height: MediaQuery.of(context).size.height / 2,
+              child: _image == null
+                  ? Text('No image selected.')
+                  : Image.file(_image ),
+            ),
+            Expanded(
+              child: Column(
+                children: <Widget>[
+                  RaisedButton(
+                    child: Text('Take a Picture'),
+                    onPressed: getCameraImage,
+                  ),
+                  RaisedButton(
+                    child: Text('Choose existing picture'),
+                    onPressed: getGalleryImage,
+                  ),
+                  RaisedButton(
+                    child: Text('Check the picture'),
+                    onPressed: getGalleryImage,
+                  ),
+                ],
+              ),
+            )
           ],
         ),
       ),
-      
     );
   }
 }
